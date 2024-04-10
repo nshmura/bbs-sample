@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary ">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/threads">Threads</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search" th:action="@{/search}" method="get">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
+                <button class="btn btn-outline-dark" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+
+<th:block th:if="${results.list.size() == 0}">
+    <div class="alert alert-danger" role="alert">
+        検索結果がありません
+    </div>
+</th:block>
+<th:block th:if="${results.list.size() != 0}">
+
+    <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+        <div class="list-group">
+            <div>
+                <p class="display-6">検索結果一覧</p>
+            </div>
+            <div class="alert alert-info" role="alert">
+                検索結果： <span th:text="${results.total}"></span> 件
+            </div>
+            <th:block th:each="result : ${results.list}">
+                <a th:href="@{/threads/{id}(id=${result.threadId})}"
+                   class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+                    <div class="d-flex gap-2 w-100 justify-content-between">
+                        <div>
+                            <div>
+                            <th:block th:if="${result.type.value == 'THREAD'}">
+                                <span class="badge bg-dark">スレッド</span>
+                            </th:block>
+                            <th:block th:if="${result.type.value == 'POST'}">
+                                <span class="badge bg-dark">投稿</span>
+                            </th:block>
+                            <span class="mb-0 opacity-75" th:text="${result.message}"></span>
+                            </div>
+                            <div class="opacity-50" th:text="'posted by ' + ${result.user?.name}"></div>
+                        </div>
+                    </div>
+                </a>
+            </th:block>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+        <div class="bd-example-snippet bd-code-snippet">
+            <div class="bd-example m-0 border-0">
+                <nav aria-label="Standard pagination example">
+                    <ul class="pagination">
+                        <li th:each="i : ${#numbers.sequence(1, maxPage)}" class="page-item"
+                            th:classappend="${(i == page ? 'active' : '')}">
+                            <a th:if="${i} == ${page}" class="page-link" href="#" th:text="${i}"></a>
+                            <a th:if="${i} != ${page}" class="page-link"
+                               th:href="@{/search(keyword=${keyword}, page=${i})}"
+                               th:text="${i}"></a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

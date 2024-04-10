@@ -1,0 +1,45 @@
+@startuml bss
+
+title bss
+
+package bss {
+
+    entity users {
+        id (ユーザID) [PK]
+        --
+        name (ユーザ名)
+    }
+
+    entity threads {
+        id (スレッドID) [PK]
+        --
+        title (スレッドタイトル)
+        user_id (スレッドを作成したユーザーID)
+    }
+
+    entity posts {
+        id (投稿ID) [PK]
+        --
+        content (投稿本文)
+        user_id (投稿を作成したユーザーID)
+        thread_id (投稿が属するスレッドID)
+    }
+
+    entity search {
+        id  [PK]
+        --
+        type (検索対象種別)
+        message (検索対象文)
+        user_id (スレッドもしくは投稿を作成したユーザーID)
+        thread_id (スレッドID)
+        post_id (投稿ID)
+    }
+
+    users ||--o{ threads
+    users ||--o{ posts
+    threads ||--o{ posts
+    threads -- search
+    posts -- search
+}
+
+@enduml

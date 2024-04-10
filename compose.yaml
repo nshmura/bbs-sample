@@ -1,0 +1,29 @@
+name: bbs-sample
+services:
+
+  bbs-db:
+    container_name: bbs-db
+    image: bbs-db
+    platform: linux/amd64
+    build: ./db
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d
+    healthcheck:
+        test: mysqladmin ping -h 127.0.0.1 -uroot -ppassword
+
+  bbs-server:
+    container_name: bbs-server
+    image: bbs-server
+    build: ./bbs-server
+    volumes:
+      - "./bbs-server/build/libs/bbs-server-0.0.1-SNAPSHOT.jar:/opt/app/app.jar"
+    command: java -jar /opt/app/app.jar
+    ports:
+      - "8000:8080"
+    depends_on:
+      bbs-db:
+        condition: service_healthy
+    environment:
+      DATASOURCE_HOST: bbs-db

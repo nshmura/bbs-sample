@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary ">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/threads">Threads</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search" th:action="@{/search}" method="get">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
+                <button class="btn btn-outline-dark" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<th:block th:if="${post.isDeleted()}">
+    <div class="alert alert-danger" role="alert">
+        この投稿は削除されました
+    </div>
+</th:block>
+<th:block th:if="${post.isDeleted() == false}">
+    <div class="d-flex flex-column flex-md-row p-4 gap-4 py-md-5 align-items-center justify-content-center">
+        <div class="list-group">
+            <div>
+                <p class="display-6">投稿編集フォーム</p>
+            </div>
+            <div>
+                <div class="bd-example-snippet bd-code-snippet">
+                    <div class="bd-example m-0 border-0">
+                        <form th:action="@{/posts/{id}/edit(id=${post?.id})}" method="post">
+                            <div class="mb-3">
+                                <label for="content" class="form-label">投稿内容</label>
+                                <textarea type="text" class="form-control" id="content" name="content"
+                                          th:text="${post?.content}"></textarea>
+                            </div>
+                            <button class="btn btn-primary" type="submit">投稿を編集する</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+</body>
+</html>

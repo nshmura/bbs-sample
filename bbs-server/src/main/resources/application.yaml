@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: bbs-sample
+  datasource:
+    url: jdbc:mysql://${DATASOURCE_HOST:localhost}:3306/bbs?useSSL=false&socketTimeout=60000&connectTimeout=10000
+    username: app
+    password: password
+  flyway:
+    enabled: true
+    locations: classpath:/db/migration
+
+bbs:
+  max-posts-per-thread: 100
